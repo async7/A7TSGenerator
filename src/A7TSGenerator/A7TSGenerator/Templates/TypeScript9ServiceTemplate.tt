@@ -1,0 +1,39 @@
+﻿<#@ template language="C#" #>
+<#@ template debug="true" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+/// <reference path="../common/A7.Service.ts" />
+<#=ModelReferences#>
+
+module Services {
+
+    export class <#=Service.Name#>Service extends A7.Service implements Interfaces.I<#=Service.Name#>Service {
+
+        constructor(url = '<#=Service.Url#>', serviceName = '<#=Service.Name#>Service') {
+            super(serviceName, url);
+        }
+
+	   <#Service.ServiceMethods.ToList().ForEach(serviceMethod => {#>
+
+        <#=serviceMethod.Name#>(<#=serviceMethod.Arguments#>): <#=serviceMethod.ReturnType#>{
+            <#=serviceMethod.Body#>
+        }
+
+		<#});#>
+
+    }
+
+}
+
+module Interfaces {
+
+	export interface I<#=Service.Name#>Service {
+	<#Service.ServiceMethods.ToList().ForEach(serviceMethod => {#>
+        <#=serviceMethod.Name#>(<#=serviceMethod.Arguments#>): <#=serviceMethod.ReturnType#>;
+
+		<#});#>	
+	}
+
+}
