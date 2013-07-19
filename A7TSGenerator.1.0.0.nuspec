@@ -20,6 +20,6 @@
         <file src="src\A7TSGenerator\A7TSGenerator\bin\Release\A7TSGenerator.dll" target="lib\A7TSGenerator.dll" />
         <file src="scripts\A7TS-GenTs.psd1" target="tools\A7TS-GenTs.psd1" />
         <file src="scripts\A7TS-GenTs.psm1" target="tools\A7TS-GenTs.psm1" />
-        <file src="tools\init.ps1" target="tools\init.ps1" />
+        <file src="scripts\init.ps1" target="tools\init.ps1" />
     </files>
 </package>
