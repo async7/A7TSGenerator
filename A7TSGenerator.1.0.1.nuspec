@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>A7TSGenerator</id>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
         <authors>Jonathan Harrison</authors>
         <owners>Async7,LLC</owners>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
