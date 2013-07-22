@@ -1,0 +1,8 @@
+﻿<?xml version="1.0"?>
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+    <system.webServer>
+        <handlers>
+            <add name="A7TSGenerator" verb="*" path="tsgenerator.axd" type="A7TSGenerator.TsGeneration, A7TSGenerator" resourceType="Unspecified" xdt:Transform="Insert" />
+        </handlers>
+    </system.webServer>
+</configuration>
