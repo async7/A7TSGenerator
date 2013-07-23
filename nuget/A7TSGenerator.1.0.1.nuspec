@@ -19,7 +19,7 @@
     <files>
         <file src="content\web.config.install.xdt" target="content\web.config.install.xdt" />
         <file src="content\web.config.uninstall.xdt" target="content\web.config.uninstall.xdt" />
-        <file src="lib\A7TSGenerator.dll" target="lib\A7TSGenerator.dll" />
+        <file src=".\src\A7TSGenerator\A7TSGenerator\bin\Release\A7TSGenerator.dll" target="lib\A7TSGenerator.dll" />
         <file src="tools\A7TS-GenTs.psd1" target="tools\A7TS-GenTs.psd1" />
         <file src="tools\A7TS-GenTs.psm1" target="tools\A7TS-GenTs.psm1" />
         <file src="tools\init.ps1" target="tools\init.ps1" />
