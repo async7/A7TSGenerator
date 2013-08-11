@@ -5,14 +5,15 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 /// <reference path="../common/A7.Service.ts" />
+/// <reference path="../models/HttpResponseMessage.ts" />
 <#=ModelReferences#>
 
 module Services {
 
     export class <#=Service.Name#>Service extends A7.Service implements Interfaces.I<#=Service.Name#>Service {
 
-        constructor(url = '<#=Service.Url#>', serviceName = '<#=Service.Name#>Service') {
-            super(serviceName, url);
+        constructor(url = '<#=Service.Url#>') {
+            super(url);
         }
 
 	   <#Service.ServiceMethods.ToList().ForEach(serviceMethod => {#>
@@ -27,13 +28,22 @@ module Services {
 
 }
 
-module Interfaces {
+module Services.Interfaces {
 
 	export interface I<#=Service.Name#>Service {
 	<#Service.ServiceMethods.ToList().ForEach(serviceMethod => {#>
         <#=serviceMethod.Name#>(<#=serviceMethod.Arguments#>): <#=serviceMethod.ReturnType#>;
 
 		<#});#>	
-	}
+
+		OnCreate<T>(fnHandler: (event: JQueryEventObject, model: T) => void );
+
+		OnUpdate<T>(fnHandler: (event: JQueryEventObject, model: T) => void );         
+        
+		OnDelete<T>(fnHandler: (event: JQueryEventObject, model: T) => void );
+
+		OnModified<T>(fnHandler: (event: JQueryEventObject, model: T, eventType: string) => void);
+
+		}
 
 }

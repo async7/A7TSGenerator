@@ -28,126 +28,132 @@ namespace A7TSGenerator.Templates
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("/// <reference path=\"../common/A7.Service.ts\" />\r\n");
+            this.Write("/// <reference path=\"../common/A7.Service.ts\" />\r\n/// <reference path=\"../models/" +
+                    "HttpResponseMessage.ts\" />\r\n");
             
-            #line 8 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
+            #line 9 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ModelReferences));
             
             #line default
             #line hidden
             this.Write("\r\n\r\nmodule Services {\r\n\r\n    export class ");
             
-            #line 12 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
+            #line 13 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Service.Name));
             
             #line default
             #line hidden
             this.Write("Service extends A7.Service implements Interfaces.I");
             
-            #line 12 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
+            #line 13 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Service.Name));
             
             #line default
             #line hidden
             this.Write("Service {\r\n\r\n        constructor(url = \'");
             
-            #line 14 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
+            #line 15 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Service.Url));
             
             #line default
             #line hidden
-            this.Write("\', serviceName = \'");
+            this.Write("\') {\r\n            super(url);\r\n        }\r\n\r\n\t   ");
             
-            #line 14 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(Service.Name));
-            
-            #line default
-            #line hidden
-            this.Write("Service\') {\r\n            super(serviceName, url);\r\n        }\r\n\r\n\t   ");
-            
-            #line 18 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
+            #line 19 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
 Service.ServiceMethods.ToList().ForEach(serviceMethod => {
             
             #line default
             #line hidden
             this.Write("\r\n        ");
             
-            #line 20 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
+            #line 21 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(serviceMethod.Name));
             
             #line default
             #line hidden
             this.Write("(");
             
-            #line 20 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
+            #line 21 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(serviceMethod.Arguments));
             
             #line default
             #line hidden
             this.Write("): ");
             
-            #line 20 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
+            #line 21 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(serviceMethod.ReturnType));
             
             #line default
             #line hidden
             this.Write("{\r\n            ");
             
-            #line 21 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
+            #line 22 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(serviceMethod.Body));
             
             #line default
             #line hidden
             this.Write("\r\n        }\r\n\r\n\t\t");
             
-            #line 24 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
+            #line 25 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
 });
             
             #line default
             #line hidden
-            this.Write("\r\n    }\r\n\r\n}\r\n\r\nmodule Interfaces {\r\n\r\n\texport interface I");
+            this.Write("\r\n    }\r\n\r\n}\r\n\r\nmodule Services.Interfaces {\r\n\r\n\texport interface I");
             
-            #line 32 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
+            #line 33 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Service.Name));
             
             #line default
             #line hidden
             this.Write("Service {\r\n\t");
             
-            #line 33 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
+            #line 34 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
 Service.ServiceMethods.ToList().ForEach(serviceMethod => {
             
             #line default
             #line hidden
             this.Write("        ");
             
-            #line 34 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
+            #line 35 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(serviceMethod.Name));
             
             #line default
             #line hidden
             this.Write("(");
             
-            #line 34 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
+            #line 35 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(serviceMethod.Arguments));
             
             #line default
             #line hidden
             this.Write("): ");
             
-            #line 34 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
+            #line 35 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(serviceMethod.ReturnType));
             
             #line default
             #line hidden
             this.Write(";\r\n\r\n\t\t");
             
-            #line 36 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
+            #line 37 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
 });
             
             #line default
             #line hidden
-            this.Write("\t\r\n\t}\r\n\r\n}");
+            this.Write(@"	
+
+		OnCreate<T>(fnHandler: (event: JQueryEventObject, model: T) => void );
+
+		OnUpdate<T>(fnHandler: (event: JQueryEventObject, model: T) => void );         
+        
+		OnDelete<T>(fnHandler: (event: JQueryEventObject, model: T) => void );
+
+		OnModified<T>(fnHandler: (event: JQueryEventObject, model: T, eventType: string) => void);
+
+		}
+
+}");
             return this.GenerationEnvironment.ToString();
         }
     }
