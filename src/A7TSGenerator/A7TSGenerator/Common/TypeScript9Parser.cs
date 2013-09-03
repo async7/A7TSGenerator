@@ -14,10 +14,12 @@ namespace A7TSGenerator.Common
     { private readonly ApiDescription _apiDescription;
         private IEnumerable<ActionParameter> _parameters;
         private const string MODELS_NAMESPACE = "Models";
+        private readonly string _serviceUrl;
 
-        public TypeScript9Parser(ApiDescription apiDescription)
+        public TypeScript9Parser(ApiDescription apiDescription, string serviceUrl)
         {
             _apiDescription = apiDescription;
+            _serviceUrl = serviceUrl;
         }
 
         public IEnumerable<ActionParameter> Parameters
@@ -143,7 +145,7 @@ namespace A7TSGenerator.Common
         private ServiceMethod getGenericServiceMethod()
         {
             var serviceMethod = new ServiceMethod();
-            var body = "var url = '" + _apiDescription.RelativePath + "';" + Environment.NewLine;
+            var body = "var url = '" + _apiDescription.RelativePath.Replace(_serviceUrl, "' + this._url + '") + "';" + Environment.NewLine;
 
             serviceMethod.Name = _apiDescription.ActionDescriptor.ActionName;
             serviceMethod.Arguments = TypeScript9Utility.GetMethodParametersAsTypeScriptArgs(_apiDescription);

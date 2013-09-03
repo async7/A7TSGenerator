@@ -36,7 +36,7 @@ namespace A7TSGenerator
                     dicServices[controllerDescriptor.ControllerName] :
                     new Service() { Name = controllerDescriptor.ControllerName, Url = "api/" + controllerDescriptor.ControllerName.ToLower() };
 
-                parser = new TypeScript9Parser(x);
+                parser = new TypeScript9Parser(x, service.Url);
                 service.ServiceMethods.Add(parser.GetServiceMethod());
 
                 var parameters = x.ActionDescriptor.GetParameters()
