@@ -148,12 +148,12 @@ namespace A7TSGenerator.Common
             var body = "var url = ";
 
             if(_apiDescription.RelativePath.ToLower().Contains(_serviceUrl.ToLower())) {
-                body += _apiDescription.RelativePath.ToLower().Replace(_serviceUrl.ToLower(), "this._url + ");
+                body += _apiDescription.RelativePath.ToLower().Replace(_serviceUrl.ToLower(), "this._url + '");
             } else {
-                body += "'" + _apiDescription.RelativePath.ToLower() + "'";
+                body += "'" + _apiDescription.RelativePath.ToLower();
             }
 
-            body += ";" + Environment.NewLine;
+            body += "';" + Environment.NewLine;
 
             serviceMethod.Name = _apiDescription.ActionDescriptor.ActionName;
             serviceMethod.Arguments = TypeScript9Utility.GetMethodParametersAsTypeScriptArgs(_apiDescription);
