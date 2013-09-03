@@ -145,7 +145,7 @@ namespace A7TSGenerator.Common
         private ServiceMethod getGenericServiceMethod()
         {
             var serviceMethod = new ServiceMethod();
-            var body = "var url = '" + _apiDescription.RelativePath.Replace(_serviceUrl, "' + this._url + '") + "';" + Environment.NewLine;
+            var body = "var url = '" + _apiDescription.RelativePath.ToLower().Replace(_serviceUrl.ToLower(), "' + this._url + '") + "';" + Environment.NewLine;
 
             serviceMethod.Name = _apiDescription.ActionDescriptor.ActionName;
             serviceMethod.Arguments = TypeScript9Utility.GetMethodParametersAsTypeScriptArgs(_apiDescription);
