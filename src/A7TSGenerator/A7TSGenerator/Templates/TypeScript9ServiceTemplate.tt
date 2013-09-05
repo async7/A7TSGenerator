@@ -32,7 +32,7 @@ module Services.Interfaces {
 
 	export interface I<#=Service.Name#>Service {
 	<#Service.ServiceMethods.ToList().ForEach(serviceMethod => {#>
-        <#=serviceMethod.Name#>(<#=serviceMethod.Arguments#>): <#=serviceMethod.ReturnType#>;
+        <#=serviceMethod.Name#>(<#=serviceMethod.ArgumentsWithoutDefaultParams#>): <#=serviceMethod.ReturnType#>;
 
 		<#});#>	
 

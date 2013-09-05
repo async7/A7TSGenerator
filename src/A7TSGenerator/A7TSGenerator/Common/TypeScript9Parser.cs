@@ -63,6 +63,7 @@ namespace A7TSGenerator.Common
                 serviceMethod = new ServiceMethod();
                 serviceMethod.Name = "GetById";
                 serviceMethod.Arguments = "id: number";
+                serviceMethod.ArgumentsWithoutDefaultParams = serviceMethod.Arguments;
                 serviceMethod.ReturnType = action.ReturnType == null ? "void" : "JQueryPromise<" + TypeScript9Utility.GetTSType(action.ReturnType) + '>';
                 serviceMethod.Body = "return super.GetById(id);";
             }
@@ -85,6 +86,7 @@ namespace A7TSGenerator.Common
                 serviceMethod = new ServiceMethod();
                 serviceMethod.Name = "Insert";
                 serviceMethod.Arguments = parameter.Name + ": " + MODELS_NAMESPACE + "." + parameter.Type.Name;
+                serviceMethod.ArgumentsWithoutDefaultParams = serviceMethod.Arguments;
                 serviceMethod.ReturnType = action.ReturnType == null ? "JQueryPromise" : "JQueryPromise<" + TypeScript9Utility.GetTSType(action.ReturnType) + '>';
                 serviceMethod.Body = "return super.Insert(" + parameter.Name + ");";
             }
@@ -109,6 +111,7 @@ namespace A7TSGenerator.Common
                 serviceMethod = new ServiceMethod();
                 serviceMethod.Name = "Update";
                 serviceMethod.Arguments = parameter.Name + ": " + MODELS_NAMESPACE + "." + parameter.Type.Name;
+                serviceMethod.ArgumentsWithoutDefaultParams = serviceMethod.Arguments;
                 serviceMethod.ReturnType = action.ReturnType == null ? "JQueryPromise" : "JQueryPromise<" + TypeScript9Utility.GetTSType(action.ReturnType) + '>';
                 serviceMethod.Body = "return super.Update(" + parameter.Name + ");";
             }
@@ -131,6 +134,7 @@ namespace A7TSGenerator.Common
                 serviceMethod = new ServiceMethod();
                 serviceMethod.Name = "DeleteById";
                 serviceMethod.Arguments = "id: number";
+                serviceMethod.ArgumentsWithoutDefaultParams = serviceMethod.Arguments;
                 serviceMethod.ReturnType = action.ReturnType == null ? "JQueryPromise" : "JQueryPromise<" + TypeScript9Utility.GetTSType(action.ReturnType) + '>';
                 serviceMethod.Body = "return super.DeleteById(id);";
             }

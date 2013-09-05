@@ -123,7 +123,7 @@ Service.ServiceMethods.ToList().ForEach(serviceMethod => {
             this.Write("(");
             
             #line 35 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ServiceTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(serviceMethod.Arguments));
+            this.Write(this.ToStringHelper.ToStringWithCulture(serviceMethod.ArgumentsWithoutDefaultParams));
             
             #line default
             #line hidden
