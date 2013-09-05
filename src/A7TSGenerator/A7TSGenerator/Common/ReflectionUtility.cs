@@ -87,6 +87,13 @@ namespace A7TSGenerator.Common
             return "null";
         }
 
+        public static Type GetGenericType(Type type)
+        {
+            if (!type.IsGenericType) return type;
+
+            return type.GetGenericArguments().First();
+        }
+
         //Reflection - Methods
         public static string GetMethodParameterSignature(MethodInfo method)
         {

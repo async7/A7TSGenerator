@@ -45,9 +45,13 @@ namespace A7TSGenerator
 
                 parameters.ForEach(p =>
                 {
-                    service.Models[p.Name] = p;
-                    dicModels[p.Name] = p;
+                    var typeAsText = ReflectionUtility.GetTypeAsText(p);
+                    service.Models[typeAsText] = p;
+                    dicModels[typeAsText] = p;
                 });
+
+                var returnType = x.ActionDescriptor.ReturnType;
+                dicModels[ReflectionUtility.GetTypeAsText(returnType)] = returnType;
 
                 dicServices[controllerDescriptor.ControllerName] = service;
                                
@@ -63,6 +67,7 @@ namespace A7TSGenerator
             var headerDelimiter = "--++--<br />";
             var services = new List<string>();
             var models = new List<string>();
+            var modelTypesProcessed = new List<string>();
 
             foreach (var kvp in dicServices)
             {
@@ -70,11 +75,18 @@ namespace A7TSGenerator
                 services.Add("Service" + headerDelimiter + kvp.Value.Name + "Service" + headerDelimiter + template.TransformText());
             }
 
-            foreach (var kvp in dicModels)
+           foreach (var kvp in dicModels)
             {
-                var template = new TypeScript9ModelTemplate(kvp.Value);
-                models.Add("Model" + headerDelimiter + kvp.Key + headerDelimiter + template.TransformText());
-            }
+                var type = ReflectionUtility.GetGenericType(kvp.Value);
+                var typeAsText = ReflectionUtility.GetTypeAsText(type);
+
+                if (!ReflectionUtility.IsNativeType(type) && !modelTypesProcessed.Contains(typeAsText))
+                {
+                    var template = new TypeScript9ModelTemplate(type);
+                    models.Add("Model" + headerDelimiter + typeAsText + headerDelimiter + template.TransformText());
+                    modelTypesProcessed.Add(typeAsText);
+                }
+            };
 
             context.Response.Write(string.Join(fileDelimiter, services.ToArray()));
 
