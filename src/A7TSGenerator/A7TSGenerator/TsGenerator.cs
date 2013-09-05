@@ -45,13 +45,16 @@ namespace A7TSGenerator
 
                 parameters.ForEach(p =>
                 {
-                    var typeAsText = ReflectionUtility.GetTypeAsText(p);
-                    service.Models[typeAsText] = p;
-                    dicModels[typeAsText] = p;
+                    var type = ReflectionUtility.GetGenericType(p);
+                    var typeAsText = ReflectionUtility.GetTypeAsText(type);
+                    service.Models[typeAsText] = type;
+                    dicModels[typeAsText] = type;
                 });
 
                 var returnType = x.ActionDescriptor.ReturnType;
-                dicModels[ReflectionUtility.GetTypeAsText(returnType)] = returnType;
+                var returnTypeAsText = ReflectionUtility.GetTypeAsText(returnType);
+                service.Models[returnTypeAsText] = returnType;
+                dicModels[returnTypeAsText] = returnType;
 
                 dicServices[controllerDescriptor.ControllerName] = service;
                                
