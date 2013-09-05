@@ -123,6 +123,11 @@ namespace A7TSGenerator.Common
 
         public static string GetMethodParametersAsTypeScriptArgs(ApiDescription apiDescription)
         {
+            return GetMethodParametersAsTypeScriptArgs(apiDescription, true);
+        }
+
+        public static string GetMethodParametersAsTypeScriptArgs(ApiDescription apiDescription, bool includeDefaultValues)
+        {
             var lstParams = apiDescription.ActionDescriptor.GetParameters().ToList()
                                 .Select(param =>
                                 {
@@ -130,11 +135,11 @@ namespace A7TSGenerator.Common
                                     var paramType = GetTSType(ReflectionUtility.GetTypeAsText(param.ParameterType));
                                     var paramName = param.ParameterName;
 
-                                    if (param.IsOptional)
+                                    if (param.IsOptional & includeDefaultValues)
                                     {
                                         paramType += " = " + getTsDefaultValue(param.DefaultValue);
                                     }
-
+                                    
                                     return paramName + ": " + paramType;
                                 });
 

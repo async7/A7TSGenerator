@@ -10,6 +10,7 @@ namespace A7TSGenerator.Models
     {
         public string Name { get; set; }
         public string Arguments { get; set; }
+        public string ArgumentsWithoutDefaultParams { get; set; }
         public string ReturnType { get; set; }
         public string Body { get; set; }
 
