@@ -51,7 +51,7 @@ namespace A7TSGenerator
                     dicModels[typeAsText] = type;
                 });
 
-                var returnType = x.ActionDescriptor.ReturnType;
+                var returnType = ReflectionUtility.GetGenericType(x.ActionDescriptor.ReturnType);
                 var returnTypeAsText = ReflectionUtility.GetTypeAsText(returnType);
                 service.Models[returnTypeAsText] = returnType;
                 dicModels[returnTypeAsText] = returnType;
