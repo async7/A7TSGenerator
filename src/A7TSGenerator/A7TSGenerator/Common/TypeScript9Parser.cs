@@ -172,14 +172,14 @@ namespace A7TSGenerator.Common
 
             body += Environment.NewLine + "            return ";
 
-            //if (_apiDescription.HttpMethod.ToString().ToLower() == "get")
-            //{
-            //    body += "A7.AJAX." + _apiDescription.HttpMethod.ToString().CaptilizeFirstLetter() + "(url, { });";
-            //}
-            //else
-            //{
+            if (_apiDescription.HttpMethod.ToString().ToLower() == "get")
+            {
+                body += "A7.AJAX.Get" + (serviceMethod.ReturnType.IndexOf("Collection") == -1 ? "" : "Collection") + "(url);";
+            }
+            else
+            {
                 body += "A7.AJAX." + _apiDescription.HttpMethod.ToString().CaptilizeFirstLetter() + (serviceMethod.ReturnType.IndexOf("Collection") == -1 ? "" : "Collection") + "(url, " + TypeScript9Utility.GetMethodParametersAsTypescriptObject(_apiDescription) + ");";
-            //}
+            }
 
             serviceMethod.Body = body;
 
