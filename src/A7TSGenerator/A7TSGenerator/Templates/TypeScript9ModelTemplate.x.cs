@@ -10,15 +10,46 @@ namespace A7TSGenerator.Templates
 {
     public partial class TypeScript9ModelTemplate
     {
-        public TypeScript9ModelTemplate(Type modelType)
+
+        private readonly bool  _useDynamicNestedModels;
+
+        public TypeScript9ModelTemplate(Type modelType, bool useDynamicNestedModels = false)
         {
             this.ModelType = modelType;
+            _useDynamicNestedModels = useDynamicNestedModels;
         }
 
         public Type ModelType { get; set; }
         public string Properties { get { return getTypeScriptProperties(); } }
         public string ModelReferences { get { return getModelReferences(); } }
 
+
+        public ICollection<Type> GetNonNativePropertyTypes(){
+            var types = new HashSet<Type>();
+
+            ModelType
+                    .GetProperties(BindingFlags.DeclaredOnly |
+                                   BindingFlags.Public |
+                                   BindingFlags.Instance)
+                    .ToList()
+                    .ForEach(prop =>
+                    {
+                        var propType = prop.PropertyType;
+
+                        if (propType.IsGenericType)
+                        {
+                            propType = propType.GetGenericArguments()[0];
+                        }
+
+                        if (!ReflectionUtility.IsNativeType(propType))
+                        {
+                            types.Add(propType);
+                        }
+
+                    });
+
+            return types;
+        }
 
         private string getModelReferences()
         {
@@ -38,7 +69,7 @@ namespace A7TSGenerator.Templates
                             propType = propType.GetGenericArguments()[0];
                         }
 
-                        if (!ReflectionUtility.IsNativeType(propType))
+                        if (!ReflectionUtility.IsNativeType(propType) && !_useDynamicNestedModels)
                         {
                             lstReferences.Add("/// <reference path=\"" + propType.Name + ".ts\" />");
                         }
@@ -66,10 +97,20 @@ namespace A7TSGenerator.Templates
                             propType = propType.GetGenericArguments()[0];
                         }
 
-                        lstProps.Add(prop.Name + ": " + TypeScript9Utility.GetTSType(propType) + ";");
+                        var typeAsText = TypeScript9Utility.GetTSType(propType);
+
+                        if (typeAsText.StartsWith("A7.ICollection"))
+                        {
+                            typeAsText = typeAsText.Replace("A7.ICollection<", "").Replace(">", "") + "[]";
+                        }
+
+                        if (typeAsText.Contains("Models.") && _useDynamicNestedModels) typeAsText = "any";
+
+                        lstProps.Add(prop.Name + ": " + typeAsText + ";");
                     });
 
             return String.Join(Environment.NewLine + "    	", lstProps.ToArray());
         }
+        
     }
 }

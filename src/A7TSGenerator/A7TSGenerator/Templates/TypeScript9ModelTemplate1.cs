@@ -28,22 +28,23 @@ namespace A7TSGenerator.Templates
         /// </summary>
         public virtual string TransformText()
         {
+            this.Write("/// <reference path=\"../common/A7.Collection.ts\" />\r\n");
             
-            #line 6 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ModelTemplate.tt"
+            #line 7 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ModelTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ModelReferences));
             
             #line default
             #line hidden
             this.Write("\r\nmodule Models {\r\n\texport interface ");
             
-            #line 8 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ModelTemplate.tt"
+            #line 9 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ModelTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.ModelType.Name));
             
             #line default
             #line hidden
             this.Write(" {\r\n");
             
-            #line 9 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ModelTemplate.tt"
+            #line 10 "E:\GitHub\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ModelTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Properties));
             
             #line default

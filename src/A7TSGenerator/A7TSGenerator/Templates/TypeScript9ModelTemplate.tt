@@ -3,6 +3,7 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
+/// <reference path="../common/A7.Collection.ts" />
 <#=ModelReferences#>
 module Models {
 	export interface <#=this.ModelType.Name#> {

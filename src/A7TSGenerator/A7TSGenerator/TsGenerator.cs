@@ -16,6 +16,14 @@ namespace A7TSGenerator
 {
     public class TsGenerator : IHttpHandler
     {
+
+        private IList<string> _lstProcessedModelTypes = new List<string>();
+        private IList<string> _models = new List<string>();
+
+        private const string HEADER_DELIMITER = "--++--<br />";
+        private const int NESTED_MODEL_DEPTH = 3;        
+        
+
         public bool IsReusable
         {
             get { return false; }
@@ -67,38 +75,54 @@ namespace A7TSGenerator
             }
 
             var fileDelimiter = "<--- FILE DELIMITER ---><br />";
-            var headerDelimiter = "--++--<br />";
+            
             var services = new List<string>();
-            var models = new List<string>();
+            
             var modelTypesProcessed = new List<string>();
 
             foreach (var kvp in dicServices)
             {
                 var template = new TypeScript9ServiceTemplate() { Service = kvp.Value };
-                services.Add("Service" + headerDelimiter + kvp.Value.Name + "Service" + headerDelimiter + template.TransformText());
+                services.Add("Service" + HEADER_DELIMITER + kvp.Value.Name + "Service" + HEADER_DELIMITER + template.TransformText());
             }
 
            foreach (var kvp in dicModels)
             {
-                var type = ReflectionUtility.GetGenericType(kvp.Value);
-                var typeAsText = ReflectionUtility.GetTypeAsText(type);
-
-                if (!ReflectionUtility.IsNativeType(type) && !modelTypesProcessed.Contains(typeAsText))
-                {
-                    var template = new TypeScript9ModelTemplate(type);
-                    models.Add("Model" + headerDelimiter + typeAsText + headerDelimiter + template.TransformText());
-                    modelTypesProcessed.Add(typeAsText);
-                }
+                processModel(kvp.Value, processChildModels);
             };
 
             context.Response.Write(string.Join(fileDelimiter, services.ToArray()));
 
-            if (models.Count() > 0)
+            if (_models.Count() > 0)
             {
                 context.Response.Write(fileDelimiter);
-                context.Response.Write(string.Join(fileDelimiter, models.ToArray()));
+                context.Response.Write(string.Join(fileDelimiter, _models.ToArray()));
             }
 
+        }
+
+        private void processModel(Type modelType, Action<TypeScript9ModelTemplate, int> onProcessedModel, bool useDynamicNestedModels = false)
+        {
+            var type = ReflectionUtility.GetGenericType(modelType);
+            var typeAsText = ReflectionUtility.GetTypeAsText(type);
+
+            if (!ReflectionUtility.IsNativeType(type) && !_lstProcessedModelTypes.Contains(typeAsText))
+            {
+                var template = new TypeScript9ModelTemplate(type, useDynamicNestedModels);
+                _models.Add("Model" + HEADER_DELIMITER + typeAsText + HEADER_DELIMITER + template.TransformText());
+                _lstProcessedModelTypes.Add(typeAsText);
+                onProcessedModel(template, 2);
+            }
+        }
+
+        private void processChildModels(TypeScript9ModelTemplate template, int currentDepth)
+        {
+            if (currentDepth > NESTED_MODEL_DEPTH) return;
+
+            template.GetNonNativePropertyTypes().ToList().ForEach(modelType =>
+            {
+                processModel(modelType, (tmpl, depth) => processChildModels(template, depth + 1), currentDepth == NESTED_MODEL_DEPTH);
+            });
         }
     }
 }

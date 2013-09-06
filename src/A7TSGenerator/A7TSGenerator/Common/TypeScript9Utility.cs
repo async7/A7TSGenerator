@@ -133,7 +133,7 @@ namespace A7TSGenerator.Common
                                 {
 
                                     var paramType = GetTSType(ReflectionUtility.GetTypeAsText(param.ParameterType));
-                                    var paramName = param.ParameterName;
+                                    var paramName = param.ParameterName + (param.IsOptional && !includeDefaultValues ? "?" : "");
 
                                     if (param.IsOptional & includeDefaultValues)
                                     {
