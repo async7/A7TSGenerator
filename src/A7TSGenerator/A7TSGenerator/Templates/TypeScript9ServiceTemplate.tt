@@ -5,7 +5,6 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 /// <reference path="../common/A7.Service.ts" />
-/// <reference path="../models/HttpResponseMessage.ts" />
 <#=ModelReferences#>
 
 module Services {
