@@ -21,7 +21,15 @@ namespace A7TSGenerator.Common
                 else
                 {
                     var value = defaultValue.ToString();
-                    return value == "False" ? "false" : value;
+                    switch(value){
+                        case "False": 
+                            value = "false";
+                            break;
+                        case "True":
+                            value = "true";
+                            break;
+                    }
+                    return value;
                 }
             }
             return "null";
