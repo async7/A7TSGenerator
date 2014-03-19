@@ -154,7 +154,7 @@ namespace A7TSGenerator.Common
             if(_apiDescription.RelativePath.ToLower().Contains(_serviceUrl.ToLower())) {
                 body += _apiDescription.RelativePath.ToLower().Replace(_serviceUrl.ToLower(), "this._url + '");
             } else {
-                body += "'" + _apiDescription.RelativePath.ToLower();
+                body += "'/" + _apiDescription.RelativePath.ToLower();
             }
 
             body += "';" + Environment.NewLine;
