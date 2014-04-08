@@ -31,6 +31,14 @@ namespace A7TSGenerator
 
         public void ProcessRequest(HttpContext context)
         {
+            string baseUrl = "api/";
+            if (!String.IsNullOrWhiteSpace(context.Request.QueryString["baseurl"]))
+            { 
+                baseUrl = context.Request.QueryString["baseurl"];
+                if (!baseUrl.EndsWith("/"))
+                    baseUrl = baseUrl + "/";
+            }
+
             var explorer = new ApiExplorer(Global.HttpConfiguration);
             var dicServices = new Dictionary<string, Service>();
             var dicModels = new Dictionary<string, Type>();
@@ -42,7 +50,7 @@ namespace A7TSGenerator
 
                 Service service = dicServices.ContainsKey(controllerDescriptor.ControllerName) ?
                     dicServices[controllerDescriptor.ControllerName] :
-                    new Service() { Name = controllerDescriptor.ControllerName, Url = "api/" + controllerDescriptor.ControllerName.ToLower() };
+                    new Service() { Name = controllerDescriptor.ControllerName, Url = baseUrl + controllerDescriptor.ControllerName.ToLower() };
 
                 parser = new TypeScript9Parser(x, service.Url);
 
