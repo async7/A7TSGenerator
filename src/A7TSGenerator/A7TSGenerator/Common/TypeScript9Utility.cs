@@ -41,6 +41,9 @@ namespace A7TSGenerator.Common
 
             switch (ReflectionUtility.GetTypeAlias(typeName).ToLower().Replace("?", ""))
             {
+                case "void":
+                    tsType = "void";
+                    break;
                 case "object":
                 case "date":
                 case "byte":
@@ -93,6 +96,9 @@ namespace A7TSGenerator.Common
 
             switch (ReflectionUtility.GetTypeAlias(typeName).ToLower().Replace("?", ""))
             {
+                case "void":
+                    tsType = "void";
+                    break;
                 case "object":
                 case "date":
                 case "byte":

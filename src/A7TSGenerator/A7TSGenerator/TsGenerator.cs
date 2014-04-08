@@ -45,7 +45,11 @@ namespace A7TSGenerator
                     new Service() { Name = controllerDescriptor.ControllerName, Url = "api/" + controllerDescriptor.ControllerName.ToLower() };
 
                 parser = new TypeScript9Parser(x, service.Url);
-                service.ServiceMethods.Add(parser.GetServiceMethod());
+
+                //Check for duplicate service methods
+                ServiceMethod serviceMethod = parser.GetServiceMethod();
+                if(!service.ServiceMethods.Any(s => s.Name == serviceMethod.Name))
+                    service.ServiceMethods.Add(serviceMethod);
 
                 var parameters = x.ActionDescriptor.GetParameters()
                     .Where(p => !ReflectionUtility.IsNativeType(p.ParameterType))
@@ -61,7 +65,8 @@ namespace A7TSGenerator
 
                 var returnType = ReflectionUtility.GetGenericType(x.ActionDescriptor.ReturnType);
                 var returnTypeAsText = ReflectionUtility.GetTypeAsText(returnType);
-                service.Models[returnTypeAsText] = returnType;
+                if(!ReflectionUtility.IsNativeType(returnType))
+                    service.Models[returnTypeAsText] = returnType;
                 dicModels[returnTypeAsText] = returnType;
 
                 dicServices[controllerDescriptor.ControllerName] = service;
@@ -106,6 +111,7 @@ namespace A7TSGenerator
             var type = ReflectionUtility.GetGenericType(modelType);
             var typeAsText = ReflectionUtility.GetTypeAsText(type);
 
+            //Checks to prevent native javascript .ts files from being created
             if (!ReflectionUtility.IsNativeType(type) && !_lstProcessedModelTypes.Contains(typeAsText))
             {
                 var template = new TypeScript9ModelTemplate(type, useDynamicNestedModels);
