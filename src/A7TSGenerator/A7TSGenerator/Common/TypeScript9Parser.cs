@@ -162,7 +162,7 @@ namespace A7TSGenerator.Common
             serviceMethod.Name = _apiDescription.ActionDescriptor.ActionName;
             serviceMethod.Arguments = TypeScript9Utility.GetMethodParametersAsTypeScriptArgs(_apiDescription);
             serviceMethod.ArgumentsWithoutDefaultParams = TypeScript9Utility.GetMethodParametersAsTypeScriptArgs(_apiDescription, false);
-            serviceMethod.ReturnType = _apiDescription.ActionDescriptor.ReturnType == null ? "JQueryPromise" : "JQueryPromise<" + TypeScript9Utility.GetTSType(_apiDescription.ActionDescriptor.ReturnType) + '>';
+            serviceMethod.ReturnType = _apiDescription.ActionDescriptor.ReturnType == null ? "JQueryPromise<void>" : "JQueryPromise<" + TypeScript9Utility.GetTSType(_apiDescription.ActionDescriptor.ReturnType) + '>';
 
             body += String.Join(Environment.NewLine, _apiDescription.ActionDescriptor.GetParameters()
                 .Select(x => _apiDescription.RelativePath.Contains("{" + x.ParameterName + "}") ? x.ParameterName : null)

@@ -6,7 +6,7 @@
 /// <reference path="../common/A7.Collection.ts" />
 <#=ModelReferences#>
 module Models {
-	export interface <#=this.ModelType.Name#> {
-<#=this.Properties#>
+	export interface <#=this.ModelType.Name#> {	
+		<#=this.Properties#>
     }
 }

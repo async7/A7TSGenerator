@@ -14,12 +14,18 @@ namespace A7TSGenerator.Templates
     public partial class TypeScript9ServiceTemplate
     {
         public Service Service { get; set; }
-        public string ModelReferences { get {   
-            var references = new List<string>();
-            foreach(var kvp in Service.Models){
-                references.Add("/// <reference path=\"../models/" + kvp.Key + ".ts\" />");
+
+        public string ModelReferences
+        {
+            get
+            {
+                var references = new List<string>();
+                foreach (var kvp in Service.Models)
+                {
+                    references.Add("/// <reference path=\"../models/" + kvp.Key + ".ts\" />");
+                }
+                return string.Join(Environment.NewLine, references.ToArray());
             }
-            return string.Join(Environment.NewLine, references.ToArray());
-        } }
+        }
     }
 }

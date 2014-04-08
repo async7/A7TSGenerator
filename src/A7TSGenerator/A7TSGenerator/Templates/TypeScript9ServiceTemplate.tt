@@ -31,10 +31,9 @@ module Services.Interfaces {
 
 	export interface I<#=Service.Name#>Service {
 	<#Service.ServiceMethods.ToList().ForEach(serviceMethod => {#>
-        <#=serviceMethod.Name#>(<#=serviceMethod.ArgumentsWithoutDefaultParams#>): <#=serviceMethod.ReturnType#>;
+	<#=serviceMethod.Name#>(<#=serviceMethod.ArgumentsWithoutDefaultParams#>): <#=serviceMethod.ReturnType#>;
 
-		<#});#>	
-
+	<#});#>	
 		OnCreate<T>(fnHandler: (event: JQueryEventObject, model: T) => void );
 
 		OnUpdate<T>(fnHandler: (event: JQueryEventObject, model: T) => void );         
@@ -43,6 +42,6 @@ module Services.Interfaces {
 
 		OnModified<T>(fnHandler: (event: JQueryEventObject, model: T, eventType: string) => void);
 
-		}
+	}
 
 }
