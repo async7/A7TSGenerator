@@ -54,10 +54,18 @@ namespace A7TSGenerator
 
                 parser = new TypeScript9Parser(x, service.Url);
 
-                //Check for duplicate service methods
-                ServiceMethod serviceMethod = parser.GetServiceMethod();
-                if(!service.ServiceMethods.Any(s => s.Name == serviceMethod.Name))
-                    service.ServiceMethods.Add(serviceMethod);
+                //Check for duplicate service methods, always replace with the last one to ensure the default route is used
+                ServiceMethod newServiceMethod = parser.GetServiceMethod();
+                var oldServiceMethod = service.ServiceMethods.FirstOrDefault(s => s.Name == newServiceMethod.Name);
+                if (oldServiceMethod == null)
+                {
+                    service.ServiceMethods.Add(newServiceMethod);
+                }
+                else
+                {
+                    service.ServiceMethods.Remove(oldServiceMethod);
+                    service.ServiceMethods.Add(newServiceMethod);
+                }
 
                 var parameters = x.ActionDescriptor.GetParameters()
                     .Where(p => !ReflectionUtility.IsNativeType(p.ParameterType))

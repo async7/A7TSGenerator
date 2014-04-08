@@ -71,8 +71,6 @@ namespace A7TSGenerator.Templates
 
                         if (!ReflectionUtility.IsNativeType(propType) && !_useDynamicNestedModels)
                         {
-                            if (propType.Name.ToLower() == "void")
-                                Console.WriteLine("shouldn't hit this");
                             lstReferences.Add("/// <reference path=\"" + propType.Name + ".ts\" />");
                         }
 
