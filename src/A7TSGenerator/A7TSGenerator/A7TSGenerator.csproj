@@ -68,7 +68,7 @@
     <Compile Include="Common\TypeScript9Utility.cs" />
     <Compile Include="Extensions\ApiDescriptionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Global.cs" />
+    <Compile Include="TsGeneratorOptions.cs" />
     <Compile Include="Interfaces\IApiDescriptorParser.cs" />
     <Compile Include="Templates\TypeScript9ModelTemplate1.cs">
       <AutoGen>True</AutoGen>

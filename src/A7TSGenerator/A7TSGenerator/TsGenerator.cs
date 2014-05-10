@@ -52,11 +52,14 @@ namespace A7TSGenerator
 
         }
 
+        public static TsGeneratorOptions Options { get; set; }
+
         private void generateModels(HttpContext context)
         {
             foreach (var kvp in _dicModels)
             {
-                processModel(kvp.Value, processChildModels);
+                var skipNestedModels = Options.ModelsToSkipNestedModels.Any(x => x.ToLower() == kvp.Key.ToLower());
+                processModel(kvp.Value, processChildModels, skipNestedModels);
             };
 
             if (_models.Count() > 0)
@@ -91,8 +94,6 @@ namespace A7TSGenerator
 
             context.Response.Write(string.Join(FILE_DELIMITER, services.ToArray()));
         }
-
-        public static TsGeneratorOptions Options { get; set; }
 
         private IApiDescriptorParser getParser(ApiDescription apiDescription, string serviceUrl)
         {
@@ -151,8 +152,8 @@ namespace A7TSGenerator
             _dicModels[returnTypeAsText] = returnType;
         }
 
-        private void processModel(Type modelType, Action<TypeScript9ModelTemplate, int> onProcessedModel, bool useDynamicNestedModels = false)
-        {
+        private void processModel(Type modelType, Action<TypeScript9ModelTemplate, int> onProcessedModelProcessChildren, bool useDynamicNestedModels = false)
+        { 
             var type = ReflectionUtility.GetGenericType(modelType);
             var typeAsText = ReflectionUtility.GetTypeAsText(type);
 
@@ -162,7 +163,8 @@ namespace A7TSGenerator
                 var template = new TypeScript9ModelTemplate(type, useDynamicNestedModels);
                 _models.Add("Model" + HEADER_DELIMITER + typeAsText + HEADER_DELIMITER + template.TransformText());
                 _lstProcessedModelTypes.Add(typeAsText);
-                onProcessedModel(template, 2);
+
+                if(!useDynamicNestedModels) onProcessedModelProcessChildren(template, 2);
             }
         }
 
@@ -172,7 +174,8 @@ namespace A7TSGenerator
 
             template.GetNonNativePropertyTypes().ToList().ForEach(modelType =>
             {
-                processModel(modelType, (tmpl, depth) => processChildModels(tmpl, depth + 1), currentDepth == Options.NestedModelsDepthLimit);
+                var skipNestedModels = currentDepth == Options.NestedModelsDepthLimit || Options.ModelsToSkipNestedModels.Any(x => x.ToLower() == modelType.Name.ToLower());
+                processModel(modelType, (tmpl, depth) => processChildModels(tmpl, depth + 1), skipNestedModels);
             });
         }
 
