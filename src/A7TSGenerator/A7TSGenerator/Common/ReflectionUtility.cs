@@ -17,7 +17,7 @@ namespace A7TSGenerator.Common
 
         public static bool IsNativeType(Type type)
         {
-            return GetNativeTypes().Any(x => x == type.Name.Replace("System.", ""));
+            return GetNativeTypes().Any(x => x == type.Name.Replace("System.", "").Replace("[]",""));
         }
 
         public static string GetTypeAlias(string type)
