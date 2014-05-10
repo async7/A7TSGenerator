@@ -22,7 +22,8 @@ namespace A7TSGenerator.Templates
                 var references = new List<string>();
                 foreach (var kvp in Service.Models)
                 {
-                    references.Add("/// <reference path=\"../models/" + kvp.Key + ".ts\" />");
+                    if(!ReflectionUtility.IsNativeType(kvp.Value))
+                        references.Add("/// <reference path=\"../models/" + kvp.Key + ".ts\" />");
                 }
                 return string.Join(Environment.NewLine, references.ToArray());
             }
