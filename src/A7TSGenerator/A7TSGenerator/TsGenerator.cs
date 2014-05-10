@@ -143,7 +143,7 @@ namespace A7TSGenerator
 
             template.GetNonNativePropertyTypes().ToList().ForEach(modelType =>
             {
-                processModel(modelType, (tmpl, depth) => processChildModels(template, depth + 1), currentDepth == NESTED_MODEL_DEPTH);
+                processModel(modelType, (tmpl, depth) => processChildModels(tmpl, depth + 1), currentDepth == NESTED_MODEL_DEPTH);
             });
         }
     }
