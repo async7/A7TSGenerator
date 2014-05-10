@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 using System.Web.Http.Description;
 using System.Web.Routing;
 using A7TSGenerator.Common;
@@ -19,107 +20,135 @@ namespace A7TSGenerator
 
         private IList<string> _lstProcessedModelTypes = new List<string>();
         private IList<string> _models = new List<string>();
+        private ApiExplorer _explorer;
+        private IDictionary<string, Service> _dicServices;
+        private IDictionary<string, Type> _dicModels;
+        private IApiDescriptorParser _parser;
 
         private const string HEADER_DELIMITER = "--++--<br />";
-        private const int NESTED_MODEL_DEPTH = 3;        
-        
-
-        public bool IsReusable
-        {
-            get { return false; }
-        }
+        private const string FILE_DELIMITER = "<--- FILE DELIMITER ---><br />";
 
         public void ProcessRequest(HttpContext context)
         {
-            string baseUrl = "api/";
-            if (!String.IsNullOrWhiteSpace(context.Request.QueryString["baseurl"]))
-            { 
-                baseUrl = context.Request.QueryString["baseurl"];
-                if (!baseUrl.EndsWith("/"))
-                    baseUrl = baseUrl + "/";
-            }
+            validateOptions(Options);
+            
+            var modelTypesProcessed = new List<string>();
 
-            var explorer = new ApiExplorer(Global.HttpConfiguration);
-            var dicServices = new Dictionary<string, Service>();
-            var dicModels = new Dictionary<string, Type>();
+            _explorer = new ApiExplorer(Options.HttpConfiguration);
+            _dicServices = new Dictionary<string, Service>();
+            _dicModels = new Dictionary<string, Type>();
 
-            explorer.ApiDescriptions.ToList().ForEach(x =>
-            {
-                var controllerDescriptor = x.ActionDescriptor.ControllerDescriptor;
-                IApiDescriptorParser parser;
+            _explorer.ApiDescriptions.ToList().ForEach(x =>
+            {                
+                var apiDescriptor = x.ActionDescriptor;
+                var controllerName = apiDescriptor.ControllerDescriptor.ControllerName;
+                _parser = getParser(x, Options.BaseApiUrl + controllerName.ToLower());
+                Service service = getService(apiDescriptor);
 
-                Service service = dicServices.ContainsKey(controllerDescriptor.ControllerName) ?
-                    dicServices[controllerDescriptor.ControllerName] :
-                    new Service() { Name = controllerDescriptor.ControllerName, Url = baseUrl + controllerDescriptor.ControllerName.ToLower() };
-
-                parser = new TypeScript9Parser(x, service.Url);
-
-                //Check for duplicate service methods, always replace with the last one to ensure the default route is used
-                ServiceMethod newServiceMethod = parser.GetServiceMethod();
-                var oldServiceMethod = service.ServiceMethods.FirstOrDefault(s => s.Name == newServiceMethod.Name);
-                if (oldServiceMethod == null)
-                {
-                    service.ServiceMethods.Add(newServiceMethod);
-                }
-                else
-                {
-                    service.ServiceMethods.Remove(oldServiceMethod);
-                    service.ServiceMethods.Add(newServiceMethod);
-                }
-
-                var parameters = x.ActionDescriptor.GetParameters()
-                    .Where(p => !ReflectionUtility.IsNativeType(p.ParameterType))
-                    .Select(p => p.ParameterType).ToList();
-
-                parameters.ForEach(p =>
-                {
-                    var type = ReflectionUtility.GetGenericType(p);
-                    var typeAsText = ReflectionUtility.GetTypeAsText(type);
-                    service.Models[typeAsText] = type;
-                    dicModels[typeAsText] = type;
-                });
-
-                var returnType = ReflectionUtility.GetGenericType(x.ActionDescriptor.ReturnType);
-                var returnTypeAsText = ReflectionUtility.GetTypeAsText(returnType);
-                if(!ReflectionUtility.IsNativeType(returnType))
-                    service.Models[returnTypeAsText] = returnType;
-                dicModels[returnTypeAsText] = returnType;
-
-                dicServices[controllerDescriptor.ControllerName] = service;
-                               
+                _dicServices[controllerName] = service;
             });
 
-            if (dicServices.Count() == 0)
+            generateResponse(context);
+
+        }
+
+        private void generateModels(HttpContext context)
+        {
+            foreach (var kvp in _dicModels)
+            {
+                processModel(kvp.Value, processChildModels);
+            };
+
+            if (_models.Count() > 0)
+            {
+                context.Response.Write(FILE_DELIMITER);
+                context.Response.Write(string.Join(FILE_DELIMITER, _models.ToArray()));
+            }
+        }
+
+        private void generateResponse(HttpContext context)
+        {
+            if (_dicServices.Count() == 0)
             {
                 context.Response.Write("{No Services Found}");
                 return;
             }
 
-            var fileDelimiter = "<--- FILE DELIMITER ---><br />";
-            
-            var services = new List<string>();
-            
-            var modelTypesProcessed = new List<string>();
+            generateServices(context);
+            generateModels(context);
 
-            foreach (var kvp in dicServices)
+        }
+
+        private void generateServices(HttpContext context)
+        {
+            var services = new List<string>();
+
+            foreach (var kvp in _dicServices)
             {
                 var template = new TypeScript9ServiceTemplate() { Service = kvp.Value };
                 services.Add("Service" + HEADER_DELIMITER + kvp.Value.Name + "Service" + HEADER_DELIMITER + template.TransformText());
             }
 
-           foreach (var kvp in dicModels)
-            {
-                processModel(kvp.Value, processChildModels);
-            };
+            context.Response.Write(string.Join(FILE_DELIMITER, services.ToArray()));
+        }
 
-            context.Response.Write(string.Join(fileDelimiter, services.ToArray()));
+        public static TsGeneratorOptions Options { get; set; }
 
-            if (_models.Count() > 0)
-            {
-                context.Response.Write(fileDelimiter);
-                context.Response.Write(string.Join(fileDelimiter, _models.ToArray()));
+        private IApiDescriptorParser getParser(ApiDescription apiDescription, string serviceUrl)
+        {
+            switch(Options.TypeScriptVersion){
+                 default: return new TypeScript9Parser(apiDescription, serviceUrl);
             }
+        }
 
+        private Service getService(HttpActionDescriptor apiDescriptor)
+        {
+            var controllerName = apiDescriptor.ControllerDescriptor.ControllerName;
+            var service = _dicServices.ContainsKey(controllerName) ?
+                    _dicServices[controllerName] :
+                    new Service() { Name = controllerName, Url = Options.BaseApiUrl + controllerName.ToLower() };
+
+            initServiceMethods(service);
+            initServiceTypes(service, apiDescriptor);
+
+            return service;
+        }
+
+        private void initServiceMethods(Service service)
+        {
+            //Check for duplicate service methods, always replace with the last one to ensure the default route is used
+            ServiceMethod newServiceMethod = _parser.GetServiceMethod();
+            var oldServiceMethod = service.ServiceMethods.FirstOrDefault(s => s.Name == newServiceMethod.Name);
+            if (oldServiceMethod == null)
+            {
+                service.ServiceMethods.Add(newServiceMethod);
+            }
+            else
+            {
+                service.ServiceMethods.Remove(oldServiceMethod);
+                service.ServiceMethods.Add(newServiceMethod);
+            }
+        }
+
+        private void initServiceTypes(Service service, HttpActionDescriptor apiDescriptor)
+        {
+            var parameters = apiDescriptor.GetParameters()
+                    .Where(p => !ReflectionUtility.IsNativeType(p.ParameterType))
+                    .Select(p => p.ParameterType).ToList();
+
+            parameters.ForEach(p =>
+            {
+                var type = ReflectionUtility.GetGenericType(p);
+                var typeAsText = ReflectionUtility.GetTypeAsText(type);
+                service.Models[typeAsText] = type;
+                _dicModels[typeAsText] = type;
+            });
+
+            var returnType = ReflectionUtility.GetGenericType(apiDescriptor.ReturnType);
+            var returnTypeAsText = ReflectionUtility.GetTypeAsText(returnType);
+            if (!ReflectionUtility.IsNativeType(returnType))
+                service.Models[returnTypeAsText] = returnType;
+            _dicModels[returnTypeAsText] = returnType;
         }
 
         private void processModel(Type modelType, Action<TypeScript9ModelTemplate, int> onProcessedModel, bool useDynamicNestedModels = false)
@@ -139,12 +168,35 @@ namespace A7TSGenerator
 
         private void processChildModels(TypeScript9ModelTemplate template, int currentDepth)
         {
-            if (currentDepth > NESTED_MODEL_DEPTH) return;
+            if (currentDepth > Options.NestedModelsDepthLimit) return;
 
             template.GetNonNativePropertyTypes().ToList().ForEach(modelType =>
             {
-                processModel(modelType, (tmpl, depth) => processChildModels(tmpl, depth + 1), currentDepth == NESTED_MODEL_DEPTH);
+                processModel(modelType, (tmpl, depth) => processChildModels(tmpl, depth + 1), currentDepth == Options.NestedModelsDepthLimit);
             });
+        }
+
+        private void validateOptions(TsGeneratorOptions options)
+        {
+            if (options == null)
+            {
+                throw new ArgumentNullException("TsGenerator.Options is null and is required.  Set this static property on application start");
+            }
+
+            if (options.HttpConfiguration == null)
+            {
+                throw new ArgumentNullException("The WebApi HttpConfiguration is a required option and is null. Set this on application start via TsGenerator.Options.HttpConfiguration");
+            }
+
+            if (!options.BaseApiUrl.EndsWith("/")) options.BaseApiUrl += "/";
+
+            options.ModelsToSkipNestedModels = options.ModelsToSkipNestedModels ?? new string[] { };
+
+        }
+
+        public bool IsReusable
+        {
+            get { return false; }
         }
     }
 }
