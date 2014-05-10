@@ -64,7 +64,7 @@ namespace A7TSGenerator.Common
                 serviceMethod.Name = "GetById";
                 serviceMethod.Arguments = "id: number";
                 serviceMethod.ArgumentsWithoutDefaultParams = serviceMethod.Arguments;
-                serviceMethod.ReturnType = action.ReturnType == null ? "void" : "JQueryPromise<" + TypeScript9Utility.GetTSType(action.ReturnType) + '>';
+                serviceMethod.ReturnType = action.ReturnType == null ? "JQueryPromise<void>" : "JQueryPromise<" + TypeScript9Utility.GetTSType(action.ReturnType) + '>';
                 serviceMethod.Body = "return super.GetById(id);";
             }
             else
@@ -87,7 +87,7 @@ namespace A7TSGenerator.Common
                 serviceMethod.Name = "Insert";
                 serviceMethod.Arguments = parameter.Name + ": " + MODELS_NAMESPACE + "." + parameter.Type.Name;
                 serviceMethod.ArgumentsWithoutDefaultParams = serviceMethod.Arguments;
-                serviceMethod.ReturnType = action.ReturnType == null ? "JQueryPromise" : "JQueryPromise<" + TypeScript9Utility.GetTSType(action.ReturnType) + '>';
+                serviceMethod.ReturnType = action.ReturnType == null ? "JQueryPromise<void>" : "JQueryPromise<" + TypeScript9Utility.GetTSType(action.ReturnType) + '>';
                 serviceMethod.Body = "return super.Insert(" + parameter.Name + ");";
             }
             else
@@ -112,7 +112,7 @@ namespace A7TSGenerator.Common
                 serviceMethod.Name = "Update";
                 serviceMethod.Arguments = parameter.Name + ": " + MODELS_NAMESPACE + "." + parameter.Type.Name;
                 serviceMethod.ArgumentsWithoutDefaultParams = serviceMethod.Arguments;
-                serviceMethod.ReturnType = action.ReturnType == null ? "JQueryPromise" : "JQueryPromise<" + TypeScript9Utility.GetTSType(action.ReturnType) + '>';
+                serviceMethod.ReturnType = action.ReturnType == null ? "JQueryPromise<void>" : "JQueryPromise<" + TypeScript9Utility.GetTSType(action.ReturnType) + '>';
                 serviceMethod.Body = "return super.Update(" + parameter.Name + ");";
             }
             else
@@ -135,7 +135,7 @@ namespace A7TSGenerator.Common
                 serviceMethod.Name = "DeleteById";
                 serviceMethod.Arguments = "id: number";
                 serviceMethod.ArgumentsWithoutDefaultParams = serviceMethod.Arguments;
-                serviceMethod.ReturnType = action.ReturnType == null ? "JQueryPromise" : "JQueryPromise<" + TypeScript9Utility.GetTSType(action.ReturnType) + '>';
+                serviceMethod.ReturnType = action.ReturnType == null ? "JQueryPromise<void>" : "JQueryPromise<" + TypeScript9Utility.GetTSType(action.ReturnType) + '>';
                 serviceMethod.Body = "return super.DeleteById(id);";
             }
             else
@@ -151,9 +151,12 @@ namespace A7TSGenerator.Common
             var serviceMethod = new ServiceMethod();
             var body = "var url = ";
 
-            if(_apiDescription.RelativePath.ToLower().Contains(_serviceUrl.ToLower())) {
+            if (_apiDescription.RelativePath.ToLower().Contains(_serviceUrl.ToLower()))
+            {
                 body += _apiDescription.RelativePath.ToLower().Replace(_serviceUrl.ToLower(), "this._url + '");
-            } else {
+            }
+            else
+            {
                 body += "'/" + _apiDescription.RelativePath.ToLower();
             }
 
@@ -162,7 +165,7 @@ namespace A7TSGenerator.Common
             serviceMethod.Name = _apiDescription.ActionDescriptor.ActionName;
             serviceMethod.Arguments = TypeScript9Utility.GetMethodParametersAsTypeScriptArgs(_apiDescription);
             serviceMethod.ArgumentsWithoutDefaultParams = TypeScript9Utility.GetMethodParametersAsTypeScriptArgs(_apiDescription, false);
-            serviceMethod.ReturnType = _apiDescription.ActionDescriptor.ReturnType == null ? "JQueryPromise" : "JQueryPromise<" + TypeScript9Utility.GetTSType(_apiDescription.ActionDescriptor.ReturnType) + '>';
+            serviceMethod.ReturnType = _apiDescription.ActionDescriptor.ReturnType == null ? "JQueryPromise<void>" : "JQueryPromise<" + TypeScript9Utility.GetTSType(_apiDescription.ActionDescriptor.ReturnType) + '>';
 
             body += String.Join(Environment.NewLine, _apiDescription.ActionDescriptor.GetParameters()
                 .Select(x => _apiDescription.RelativePath.Contains("{" + x.ParameterName + "}") ? x.ParameterName : null)

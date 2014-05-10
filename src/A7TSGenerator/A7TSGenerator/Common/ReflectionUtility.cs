@@ -12,7 +12,7 @@ namespace A7TSGenerator.Common
         //Reflection - Parameters and Result Types
         public static string[] GetNativeTypes()
         {
-            return new string[] { "Object", "String", "Boolean", "Byte", "SByte", "Int16", "UInt16", "Int32", "UInt32", "Int64", "UInt64", "Single", "Double", "Decimal", "Char", "DateTime" };
+            return new string[] { "Object", "String", "Boolean", "Byte", "SByte", "Int16", "UInt16", "Int32", "UInt32", "Int64", "UInt64", "Single", "Double", "Decimal", "Char", "DateTime", "Void" };
         }
 
         public static bool IsNativeType(Type type)
@@ -40,6 +40,7 @@ namespace A7TSGenerator.Common
             dict.Add("Double", "double");
             dict.Add("Decimal", "decimal");
             dict.Add("Char", "char");
+            dict.Add("Void", "void");
 
             if (dict.ContainsKey(typeName))
             {
@@ -89,6 +90,8 @@ namespace A7TSGenerator.Common
 
         public static Type GetGenericType(Type type)
         {
+            if (type == null) return typeof(void);
+
             if (!type.IsGenericType) return type;
 
             return type.GetGenericArguments().First();

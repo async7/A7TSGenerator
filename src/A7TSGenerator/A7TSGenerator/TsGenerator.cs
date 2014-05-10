@@ -31,6 +31,14 @@ namespace A7TSGenerator
 
         public void ProcessRequest(HttpContext context)
         {
+            string baseUrl = "api/";
+            if (!String.IsNullOrWhiteSpace(context.Request.QueryString["baseurl"]))
+            { 
+                baseUrl = context.Request.QueryString["baseurl"];
+                if (!baseUrl.EndsWith("/"))
+                    baseUrl = baseUrl + "/";
+            }
+
             var explorer = new ApiExplorer(Global.HttpConfiguration);
             var dicServices = new Dictionary<string, Service>();
             var dicModels = new Dictionary<string, Type>();
@@ -42,10 +50,22 @@ namespace A7TSGenerator
 
                 Service service = dicServices.ContainsKey(controllerDescriptor.ControllerName) ?
                     dicServices[controllerDescriptor.ControllerName] :
-                    new Service() { Name = controllerDescriptor.ControllerName, Url = "api/" + controllerDescriptor.ControllerName.ToLower() };
+                    new Service() { Name = controllerDescriptor.ControllerName, Url = baseUrl + controllerDescriptor.ControllerName.ToLower() };
 
                 parser = new TypeScript9Parser(x, service.Url);
-                service.ServiceMethods.Add(parser.GetServiceMethod());
+
+                //Check for duplicate service methods, always replace with the last one to ensure the default route is used
+                ServiceMethod newServiceMethod = parser.GetServiceMethod();
+                var oldServiceMethod = service.ServiceMethods.FirstOrDefault(s => s.Name == newServiceMethod.Name);
+                if (oldServiceMethod == null)
+                {
+                    service.ServiceMethods.Add(newServiceMethod);
+                }
+                else
+                {
+                    service.ServiceMethods.Remove(oldServiceMethod);
+                    service.ServiceMethods.Add(newServiceMethod);
+                }
 
                 var parameters = x.ActionDescriptor.GetParameters()
                     .Where(p => !ReflectionUtility.IsNativeType(p.ParameterType))
@@ -61,7 +81,8 @@ namespace A7TSGenerator
 
                 var returnType = ReflectionUtility.GetGenericType(x.ActionDescriptor.ReturnType);
                 var returnTypeAsText = ReflectionUtility.GetTypeAsText(returnType);
-                service.Models[returnTypeAsText] = returnType;
+                if(!ReflectionUtility.IsNativeType(returnType))
+                    service.Models[returnTypeAsText] = returnType;
                 dicModels[returnTypeAsText] = returnType;
 
                 dicServices[controllerDescriptor.ControllerName] = service;
@@ -106,6 +127,7 @@ namespace A7TSGenerator
             var type = ReflectionUtility.GetGenericType(modelType);
             var typeAsText = ReflectionUtility.GetTypeAsText(type);
 
+            //Checks to prevent native javascript .ts files from being created
             if (!ReflectionUtility.IsNativeType(type) && !_lstProcessedModelTypes.Contains(typeAsText))
             {
                 var template = new TypeScript9ModelTemplate(type, useDynamicNestedModels);
