@@ -12,7 +12,7 @@ namespace A7TSGenerator.Extensions
     {
         public static IEnumerable<ActionParameter> Parameters(this ApiDescription description)
         {
-            return description.ParameterDescriptions.Select(x => new ActionParameter()
+            return description.ParameterDescriptions.Where(x => x.ParameterDescriptor != null).Select(x => new ActionParameter()
             {
                 Name = x.ParameterDescriptor.ParameterName,
                 Type = x.ParameterDescriptor.ParameterType,
