@@ -12,7 +12,7 @@ namespace A7TSGenerator
         public TsGeneratorOptions(HttpConfiguration configuration)
         {
             HttpConfiguration = configuration;
-            BaseApiUrl = "api/";
+            BaseApiUrl = "/api/";
             NestedModelsDepthLimit = 3;
             ModelsToSkipNestedModels = new string[] { };
             TypeScriptVersion = TYPE_SCRIPT_VERSION.v1;
