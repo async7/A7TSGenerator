@@ -171,7 +171,7 @@ namespace A7TSGenerator.Common
             body += String.Join(Environment.NewLine, _apiDescription.ActionDescriptor.GetParameters()
                 .Select(x => _apiDescription.RelativePath.Contains("{" + x.ParameterName + "}") ? x.ParameterName : null)
                 .Where(x => x != null)
-                .Select(x => "            url = url.replace(/{" + x + "}/gi, typeof " + x + " == 'undefined' ? '' : " + x + ".toString());")
+                .Select(x => "            url = url.replace(/{" + x + "}/gi, " + x + " === null ? '' : " + x + ".toString());")
                 .ToArray());
 
             body += Environment.NewLine + "            return ";
