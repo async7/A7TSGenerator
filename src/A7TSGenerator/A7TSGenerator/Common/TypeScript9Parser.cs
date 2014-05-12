@@ -149,15 +149,16 @@ namespace A7TSGenerator.Common
         private ServiceMethod getGenericServiceMethod()
         {
             var serviceMethod = new ServiceMethod();
-            var body = "var url = ";
+            var apiPath = "/" + _apiDescription.RelativePath.ToLower();
+            var body = "var url = ";            
 
-            if (_apiDescription.RelativePath.ToLower().Contains(_serviceUrl.ToLower()))
+            if (apiPath.Contains(_serviceUrl.ToLower()))
             {
-                body += _apiDescription.RelativePath.ToLower().Replace(_serviceUrl.ToLower(), "this._url + '");
+                body += apiPath.Replace(_serviceUrl.ToLower(), "this._url + '");
             }
             else
             {
-                body += "'/" + _apiDescription.RelativePath.ToLower();
+                body += apiPath;
             }
 
             body += "';" + Environment.NewLine;
