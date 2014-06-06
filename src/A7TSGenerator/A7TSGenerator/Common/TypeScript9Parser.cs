@@ -158,7 +158,7 @@ namespace A7TSGenerator.Common
             }
             else
             {
-                body += apiPath;
+                body += "'" + apiPath;
             }
 
             body += "';" + Environment.NewLine;
