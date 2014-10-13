@@ -33,6 +33,7 @@ namespace A7TSGenerator
             validateOptions(Options);
             
             var modelTypesProcessed = new List<string>();
+            var controllerFilter = context.Request["controllerFilter"] ?? "";          
 
             _explorer = new ApiExplorer(Options.HttpConfiguration);
             _dicServices = new Dictionary<string, Service>();
@@ -40,12 +41,18 @@ namespace A7TSGenerator
 
             _explorer.ApiDescriptions.ToList().ForEach(x =>
             {                
+                
                 var apiDescriptor = x.ActionDescriptor;
                 var controllerName = apiDescriptor.ControllerDescriptor.ControllerName;
-                _parser = getParser(x, Options.BaseApiUrl + controllerName.ToLower());
-                Service service = getService(apiDescriptor);
 
-                _dicServices[controllerName] = service;
+                if (controllerFilter == "" || controllerName.ToLower().StartsWith(controllerFilter))
+                {
+                    _parser = getParser(x, Options.BaseApiUrl + controllerName.ToLower());
+                    Service service = getService(apiDescriptor);
+
+                    _dicServices[controllerName] = service;
+                }
+
             });
 
             generateResponse(context);
