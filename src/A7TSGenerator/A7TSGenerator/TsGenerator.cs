@@ -45,7 +45,7 @@ namespace A7TSGenerator
                 var apiDescriptor = x.ActionDescriptor;
                 var controllerName = apiDescriptor.ControllerDescriptor.ControllerName;
 
-                if (controllerFilter == "" || controllerName.ToLower().StartsWith(controllerFilter))
+                if (controllerFilter == "" || controllerName.ToLower().StartsWith(controllerFilter.ToLower()))
                 {
                     _parser = getParser(x, Options.BaseApiUrl + controllerName.ToLower());
                     Service service = getService(apiDescriptor);
