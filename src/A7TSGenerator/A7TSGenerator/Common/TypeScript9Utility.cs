@@ -151,7 +151,14 @@ namespace A7TSGenerator.Common
 
                                     if (param.IsOptional & includeDefaultValues)
                                     {
-                                        paramType += " = " + getTsDefaultValue(param.DefaultValue);
+                                        if (param.ParameterType.IsEnum)
+                                        {
+                                            paramType += " = Models." + param.ParameterType.Name + '.' + getTsDefaultValue(param.DefaultValue);
+                                        }
+                                        else
+                                        {
+                                            paramType += " = " + getTsDefaultValue(param.DefaultValue);
+                                        }
                                     }
                                     
                                     return paramName + ": " + paramType;

@@ -68,6 +68,12 @@
     <Compile Include="Common\TypeScript9Utility.cs" />
     <Compile Include="Extensions\ApiDescriptionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Templates\TypeScript9EnumModelTemplate.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TypeScript9EnumModelTemplate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Templates\TypeScript9EnumModelTemplate.x.cs" />
     <Compile Include="TsGeneratorOptions.cs" />
     <Compile Include="Interfaces\IApiDescriptorParser.cs" />
     <Compile Include="Templates\TypeScript9ModelTemplate1.cs">
@@ -90,6 +96,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Templates\TypeScript9EnumModelTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>TypeScript9EnumModelTemplate.cs</LastGenOutput>
+    </None>
     <None Include="Templates\TypeScript9ModelTemplate.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>TypeScript9ModelTemplate1.cs</LastGenOutput>
