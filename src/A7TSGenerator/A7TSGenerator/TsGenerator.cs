@@ -167,11 +167,23 @@ namespace A7TSGenerator
             //Checks to prevent native javascript .ts files from being created
             if (!ReflectionUtility.IsNativeType(type) && !_lstProcessedModelTypes.Contains(typeAsText))
             {
-                var template = new TypeScript9ModelTemplate(type, useDynamicNestedModels);
-                _models.Add("Model" + HEADER_DELIMITER + typeAsText + HEADER_DELIMITER + template.TransformText());
+                var modelText = "";
+                TypeScript9ModelTemplate template = null;
+
+                if (type.IsEnum)
+                {
+                    modelText = (new TypeScript9EnumModelTemplate(type)).TransformText();
+                }
+                else
+                {
+                    template = new TypeScript9ModelTemplate(type, useDynamicNestedModels);
+                    modelText = template.TransformText();
+                }
+
+                _models.Add("Model" + HEADER_DELIMITER + typeAsText + HEADER_DELIMITER + modelText);
                 _lstProcessedModelTypes.Add(typeAsText);
 
-                if(!useDynamicNestedModels) onProcessedModelProcessChildren(template, 2);
+                if(!useDynamicNestedModels && template != null) onProcessedModelProcessChildren(template, 2);
             }
         }
 

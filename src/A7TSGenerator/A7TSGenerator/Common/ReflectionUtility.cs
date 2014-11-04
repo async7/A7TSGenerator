@@ -106,7 +106,10 @@ namespace A7TSGenerator.Common
                                 var paramType = GetTypeAsText(param.ParameterType);
                                 var paramName = param.Name;
 
-                                if (System.DBNull.Value != param.DefaultValue)
+                                if (System.DBNull.Value != param.DefaultValue && param.ParameterType.IsEnum)
+                                {
+                                    paramName += " = Models." + param.ParameterType.Name + '.' + GetParameterDefaultValue(param);
+                                } else if (System.DBNull.Value != param.DefaultValue)
                                 {
                                     paramName += " = " + GetParameterDefaultValue(param);
                                 }
