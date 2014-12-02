@@ -106,7 +106,7 @@ namespace A7TSGenerator.Templates
 
                         if (typeAsText.Contains("Models.") && _useDynamicNestedModels) typeAsText = "any";
 
-                        lstProps.Add(prop.Name + ": " + typeAsText + ";");
+                        lstProps.Add(prop.Name + ": " + typeAsText + " = null;");
                     });
 
             return String.Join(Environment.NewLine + "    	", lstProps.ToArray());

@@ -18,7 +18,7 @@ namespace A7TSGenerator.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\Users\adrayer\Projects\async7\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ModelTemplate.tt"
+    #line 1 "C:\Github\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ModelTemplate.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "12.0.0.0")]
     public partial class TypeScript9ModelTemplate : TypeScript9ModelTemplateBase
     {
@@ -30,21 +30,21 @@ namespace A7TSGenerator.Templates
         {
             this.Write("/// <reference path=\"../common/A7.Collection.ts\" />\r\n");
             
-            #line 7 "C:\Users\adrayer\Projects\async7\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ModelTemplate.tt"
+            #line 7 "C:\Github\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ModelTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ModelReferences));
             
             #line default
             #line hidden
-            this.Write("\r\nmodule Models {\r\n\texport interface ");
+            this.Write("\r\nmodule Models {\r\n\texport class ");
             
-            #line 9 "C:\Users\adrayer\Projects\async7\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ModelTemplate.tt"
+            #line 9 "C:\Github\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ModelTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.ModelType.Name));
             
             #line default
             #line hidden
             this.Write(" {\t\r\n\t\t");
             
-            #line 10 "C:\Users\adrayer\Projects\async7\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ModelTemplate.tt"
+            #line 10 "C:\Github\A7TSGenerator\src\A7TSGenerator\A7TSGenerator\Templates\TypeScript9ModelTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Properties));
             
             #line default
