@@ -84,7 +84,10 @@ namespace A7TSGenerator.Common
         {
             if (type.IsGenericType && type.GenericTypeArguments.Count() == 1)
             {
-                return "A7.ICollection<" + GetTSType(type.GenericTypeArguments.First()) + ">";
+                if (type.Name.StartsWith("Nullable"))
+                    return GetTSType(type.GenericTypeArguments.First());
+                else
+                    return "A7.ICollection<" + GetTSType(type.GenericTypeArguments.First()) + ">";
             }
             else if (type.IsGenericType)
             {
@@ -146,7 +149,7 @@ namespace A7TSGenerator.Common
                                 .Select(param =>
                                 {
 
-                                    var paramType = GetTSType(ReflectionUtility.GetTypeAsText(param.ParameterType));
+                                    var paramType = GetTSType(param.ParameterType);
                                     var paramName = param.ParameterName + (param.IsOptional && !includeDefaultValues ? "?" : "");
 
                                     if (param.IsOptional & includeDefaultValues)
