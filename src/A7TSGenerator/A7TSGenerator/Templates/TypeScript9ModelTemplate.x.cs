@@ -53,7 +53,7 @@ namespace A7TSGenerator.Templates
 
         private string getModelReferences()
         {
-            var lstReferences = new List<string>();
+            var lstReferences = new SortedSet<string>();
 
             ModelType
                     .GetProperties(BindingFlags.DeclaredOnly |
@@ -69,7 +69,9 @@ namespace A7TSGenerator.Templates
                             propType = propType.GetGenericArguments()[0];
                         }
 
-                        if (!ReflectionUtility.IsNativeType(propType) && !_useDynamicNestedModels)
+                        var isSelfReference = ModelType.Name == propType.Name;
+
+                        if (!ReflectionUtility.IsNativeType(propType) && !_useDynamicNestedModels && !isSelfReference)
                         {
                             lstReferences.Add("/// <reference path=\"" + propType.Name + ".ts\" />");
                         }
