@@ -114,12 +114,23 @@ namespace A7TSGenerator
             var controllerName = apiDescriptor.ControllerDescriptor.ControllerName;
             var service = _dicServices.ContainsKey(controllerName) ?
                     _dicServices[controllerName] :
-                    new Service() { Name = controllerName, Url = Options.BaseApiUrl + controllerName.ToLower() };
+                    new Service() { Name = controllerName, Url = getUrl(apiDescriptor.ControllerDescriptor) };
 
             initServiceMethods(service);
             initServiceTypes(service, apiDescriptor);
 
             return service;
+        }
+
+        private string getUrl(HttpControllerDescriptor controllerDescriptor)
+        {
+            foreach (var attribute in controllerDescriptor.ControllerType.GetCustomAttributes(true))
+            {
+                var routePrefix = attribute as RoutePrefixAttribute;
+                if (routePrefix != null)
+                    return "/" + routePrefix.Prefix;
+            }
+            return Options.BaseApiUrl + controllerDescriptor.ControllerName.ToLower();
         }
 
         private void initServiceMethods(Service service)
