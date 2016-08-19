@@ -178,11 +178,11 @@ namespace A7TSGenerator.Common
 
             if (_apiDescription.HttpMethod.ToString().ToLower() == "get")
             {
-                body += "A7.AJAX.Get" + (serviceMethod.ReturnType.IndexOf("Collection") == -1 ? "" : "Collection") + "(url);";
+                body += "A7.Http.HttpClient.Get" + (serviceMethod.ReturnType.IndexOf("Collection") == -1 ? "" : "Collection") + "(url);";
             }
             else
             {
-                body += "A7.AJAX." + _apiDescription.HttpMethod.ToString().CaptilizeFirstLetter() + (serviceMethod.ReturnType.IndexOf("Collection") == -1 ? "" : "Collection") + "(url, " + TypeScript9Utility.GetMethodParametersAsTypescriptObject(_apiDescription) + ");";
+                body += "A7.Http.HttpClient." + _apiDescription.HttpMethod.ToString().CaptilizeFirstLetter() + (serviceMethod.ReturnType.IndexOf("Collection") == -1 ? "" : "Collection") + "(url, " + TypeScript9Utility.GetMethodParametersAsTypescriptObject(_apiDescription) + ");";
             }
 
             serviceMethod.Body = body;

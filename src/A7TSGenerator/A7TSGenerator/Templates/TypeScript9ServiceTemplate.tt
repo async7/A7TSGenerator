@@ -4,12 +4,16 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
-/// <reference path="../common/A7.Service.ts" />
+/// <reference path="../framework/a7/collections/icollection.ts" />
+/// <reference path="../framework/a7/collections/collection.ts" />
+/// <reference path="../framework/a7/decorators/injectable.ts" />
+/// <reference path="../framework/a7/services/service.ts" />
 <#=ModelReferences#>
 
 module Services {
-
-    export class <#=Service.Name#>Service extends A7.Service implements Interfaces.I<#=Service.Name#>Service {
+ 
+	@a7.injectable()
+    export class <#=Service.Name#>Service extends A7.Services.Service implements Interfaces.I<#=Service.Name#>Service {
 
         constructor(url = '<#=Service.Url#>') {
             super(url);
@@ -31,16 +35,16 @@ module Services.Interfaces {
 
 	export interface I<#=Service.Name#>Service {
 	<#Service.ServiceMethods.ToList().ForEach(serviceMethod => {#>
-	<#=serviceMethod.Name#>(<#=serviceMethod.ArgumentsWithoutDefaultParams#>): <#=serviceMethod.ReturnType#>;
+	<#=serviceMethod.Name#>: (<#=serviceMethod.ArgumentsWithoutDefaultParams#>) => <#=serviceMethod.ReturnType#>;
 
 	<#});#>	
-		OnCreate<T>(fnHandler: (event: JQueryEventObject, model: T) => void );
+		OnCreate: <T>(fnHandler: (event: JQueryEventObject, model: T) => void ) => void;
 
-		OnUpdate<T>(fnHandler: (event: JQueryEventObject, model: T) => void );         
+		OnUpdate: <T>(fnHandler: (event: JQueryEventObject, model: T) => void ) => void;         
         
-		OnDelete<T>(fnHandler: (event: JQueryEventObject, model: T) => void );
+		OnDelete: <T>(fnHandler: (event: JQueryEventObject, model: T) => void ) => void;
 
-		OnModified<T>(fnHandler: (event: JQueryEventObject, model: T, eventType: string) => void);
+		OnModified: <T>(fnHandler: (event: JQueryEventObject, model: T, eventType: string) => void) => void;
 
 	}
 
