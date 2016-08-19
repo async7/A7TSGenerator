@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -23,15 +23,21 @@ namespace A7TSGenerator.Templates
         public string Properties { get { return getTypeScriptProperties(); } }
         public string ModelReferences { get { return getModelReferences(); } }
 
+        private List<PropertyInfo> listProperties(Type t)
+        {
+            return t
+                .GetProperties(
+                               // 11/10/2015 remove in order to handle & flatten class hierarchies (in future can mirror hierarchy in TS)
+                               //BindingFlags.DeclaredOnly |
+                               BindingFlags.Public |
+                               BindingFlags.Instance)
+                .ToList();
+        }
 
         public ICollection<Type> GetNonNativePropertyTypes(){
             var types = new HashSet<Type>();
 
-            ModelType
-                    .GetProperties(BindingFlags.DeclaredOnly |
-                                   BindingFlags.Public |
-                                   BindingFlags.Instance)
-                    .ToList()
+            listProperties(ModelType)
                     .ForEach(prop =>
                     {
                         var propType = prop.PropertyType;
@@ -55,11 +61,7 @@ namespace A7TSGenerator.Templates
         {
             var lstReferences = new SortedSet<string>();
 
-            ModelType
-                    .GetProperties(BindingFlags.DeclaredOnly |
-                                   BindingFlags.Public |
-                                   BindingFlags.Instance)
-                    .ToList()
+            listProperties(ModelType)
                     .ForEach(prop =>
                     {
                         var propType = prop.PropertyType;
@@ -85,11 +87,7 @@ namespace A7TSGenerator.Templates
         {
             var lstProps = new List<string>();
 
-            ModelType
-                    .GetProperties(BindingFlags.DeclaredOnly |
-                                   BindingFlags.Public |
-                                   BindingFlags.Instance)
-                    .ToList()
+            listProperties(ModelType)
                     .ForEach(prop =>
                     {
                         var propType = prop.PropertyType;
