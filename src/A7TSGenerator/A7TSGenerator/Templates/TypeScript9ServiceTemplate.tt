@@ -15,8 +15,10 @@ module Services {
 	@a7.injectable()
     export class <#=Service.Name#>Service extends A7.Services.Service implements Interfaces.I<#=Service.Name#>Service {
 
-        constructor(url = '<#=Service.Url#>') {
-            super(url);
+        constructor() {
+            super();
+
+			this._url = '<#=Service.Url#>';
         }
 
 	   <#Service.ServiceMethods.ToList().ForEach(serviceMethod => {#>
@@ -36,16 +38,11 @@ module Services.Interfaces {
 	export interface I<#=Service.Name#>Service {
 	<#Service.ServiceMethods.ToList().ForEach(serviceMethod => {#>
 	<#=serviceMethod.Name#>: (<#=serviceMethod.ArgumentsWithoutDefaultParams#>) => <#=serviceMethod.ReturnType#>;
-
 	<#});#>	
 		OnCreate: <T>(fnHandler: (event: JQueryEventObject, model: T) => void ) => void;
-
 		OnUpdate: <T>(fnHandler: (event: JQueryEventObject, model: T) => void ) => void;         
-        
 		OnDelete: <T>(fnHandler: (event: JQueryEventObject, model: T) => void ) => void;
-
 		OnModified: <T>(fnHandler: (event: JQueryEventObject, model: T, eventType: string) => void) => void;
-
 	}
 
 }
