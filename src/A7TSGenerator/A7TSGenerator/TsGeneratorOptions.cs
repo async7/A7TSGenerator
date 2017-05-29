@@ -15,6 +15,7 @@ namespace A7TSGenerator
             BaseApiUrl = "/api/";
             NestedModelsDepthLimit = 3;
             ModelsToSkipNestedModels = new string[] { };
+            ModelsToSkip = new string[] { };
             TypeScriptVersion = TYPE_SCRIPT_VERSION.v1;
         }
 
@@ -22,6 +23,7 @@ namespace A7TSGenerator
         public HttpConfiguration HttpConfiguration { get; set; }
         public int NestedModelsDepthLimit { get; set; }
         public string[] ModelsToSkipNestedModels { get; set; }
+        public string[] ModelsToSkip { get; set; }
         public TYPE_SCRIPT_VERSION TypeScriptVersion { get; set; }
     }
 

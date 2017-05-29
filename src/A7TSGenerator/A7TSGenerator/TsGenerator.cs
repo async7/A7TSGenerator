@@ -65,8 +65,11 @@ namespace A7TSGenerator
         {
             foreach (var kvp in _dicModels)
             {
-                var skipNestedModels = Options.ModelsToSkipNestedModels.Any(x => x.ToLower() == kvp.Key.ToLower());
-                processModel(kvp.Value, processChildModels, skipNestedModels);
+                if (!Options.ModelsToSkip.Any(x => x.ToLower() == kvp.Key.ToLower()))
+                {
+                    var skipNestedModels = Options.ModelsToSkipNestedModels.Any(x => x.ToLower() == kvp.Key.ToLower());
+                    processModel(kvp.Value, processChildModels, skipNestedModels);
+                }
             };
 
             if (_models.Count() > 0)
@@ -204,8 +207,11 @@ namespace A7TSGenerator
 
             template.GetNonNativePropertyTypes().ToList().ForEach(modelType =>
             {
-                var skipNestedModels = currentDepth == Options.NestedModelsDepthLimit || Options.ModelsToSkipNestedModels.Any(x => x.ToLower() == modelType.Name.ToLower());
-                processModel(modelType, (tmpl, depth) => processChildModels(tmpl, depth + 1), skipNestedModels);
+                if (!Options.ModelsToSkip.Any(x => x.ToLower() == modelType.Name.ToLower()))
+                {
+                    var skipNestedModels = currentDepth == Options.NestedModelsDepthLimit || Options.ModelsToSkipNestedModels.Any(x => x.ToLower() == modelType.Name.ToLower());
+                    processModel(modelType, (tmpl, depth) => processChildModels(tmpl, depth + 1), skipNestedModels);
+                }
             });
         }
 
